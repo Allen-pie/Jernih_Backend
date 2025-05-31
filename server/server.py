@@ -51,11 +51,11 @@ def predict():
     prediction = int(prob >= threshold)
     # Compute severity
     if prob >= 0.8:
-        severity = "High"
+        severity = "Tinggi"
     elif prob >= 0.5:
-        severity = "Medium"
+        severity = "Sedang"
     else:
-        severity = "Low"
+        severity = "Rendah"
 
     return jsonify({
         'potability_prediction': prediction,
