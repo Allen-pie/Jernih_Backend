@@ -20,9 +20,7 @@ CORS(app, resources={r"/predict": {"origins": ["http://localhost:3000"]}});
 @app.route('/', methods=['GET'])
 def home():
     # return "Water Potability Prediction Server is running!"
-    return jsonify({
-        'Sucessfully Connected to Jernih Server'
-    })
+    return jsonify('Sucessfully Connected to Jernih Server')
 
 @app.route('/predict', methods=['POST'])
 def predict():
