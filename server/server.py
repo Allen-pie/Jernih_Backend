@@ -19,7 +19,7 @@ CORS(app)
 @app.route('/', methods=['GET'])
 def home():
     # return "Water Potability Prediction Server is running!"
-    jsonify({
+    return jsonify({
         'ARE YOU ': 'SURE'
     })
 
