@@ -16,9 +16,12 @@ app = Flask(__name__)
 
 CORS(app)
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
-    return "Water Potability Prediction Server is running!"
+    # return "Water Potability Prediction Server is running!"
+    jsonify({
+        'ARE YOU ': 'SURE'
+    })
 
 @app.route('/predict', methods=['POST'])
 def predict():
