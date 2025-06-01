@@ -14,13 +14,14 @@ threshold = np.load(threshold_path)
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, resources={r"/predict": {"origins": ["http://localhost:3000"]}});
+
 
 @app.route('/', methods=['GET'])
 def home():
     # return "Water Potability Prediction Server is running!"
     return jsonify({
-        'ARE YOU ': 'SURE'
+        'Sucessfully Connected to Jernih Server'
     })
 
 @app.route('/predict', methods=['POST'])
@@ -34,16 +35,21 @@ def predict():
     # Expected input: JSON with keys matching your features
     features = [
         data.get('ph'),
-        data.get('Hardness'),
-        data.get('Solids'),
-        data.get('Chloramines'),
-        data.get('Sulfate'),
-        data.get('Conductivity'),
-        data.get('Organic_carbon'),
-        data.get('Trihalomethanes'),
-        data.get('Turbidity')
+        data.get('hardness'),
+        data.get('solids'),
+        data.get('chloramines'),
+        data.get('sulfate'),
+        data.get('conductivity'),
+        data.get('organic_carbon'),
+        data.get('trihalomethanes'),
+        data.get('turbidity')
     ]
     feature_names = ['ph', 'Hardness', 'Solids', 'Chloramines', 'Sulfate', 'Conductivity', 'Organic_carbon', 'Trihalomethanes', 'Turbidity']
+
+    print("DATA RECEIVED:", data)
+    print("FEATURES:", features)
+    print("ISNA CHECK:\n", pd.DataFrame([features], columns=feature_names).isna())
+
 
     features_df = pd.DataFrame([features], columns=feature_names)
 
