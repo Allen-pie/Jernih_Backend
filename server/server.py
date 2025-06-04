@@ -7,10 +7,12 @@ import pandas as pd
 import os
 
 # Load the trained model and threshold
-model_path = os.path.join(os.path.dirname(__file__), 'water_potability_model.pkl')
+model_path = os.path.join(os.path.dirname(__file__), 'model.pkl')
 model = joblib.load(model_path)
 threshold_path = os.path.join(os.path.dirname(__file__), 'best_threshold.npy')
 threshold = np.load(threshold_path)
+scaler_path = os.path.join(os.path.dirname(__file__), 'scaler.pkl')
+scaler = joblib.load(scaler_path)
 
 app = Flask(__name__)
 
@@ -50,9 +52,10 @@ def predict():
 
 
     features_df = pd.DataFrame([features], columns=feature_names)
+    features_scaled = scaler.transform(features_df)
 
     # Predict probability
-    prob = model.predict_proba(features_df)[0][1]
+    prob = model.predict_proba(features_scaled)[:, 1]
 
     # Apply dynamic threshold
     prediction = int(prob >= threshold)
@@ -63,7 +66,12 @@ def predict():
         severity = "Sedang"
     else:
         severity = "Rendah"
-
+    
+    print("Scaled features:\n", features_scaled)
+    print("Predicted probability:", prob)
+    print("Threshold:", threshold)
+    print("Predicted class:", prediction)
+    
     return jsonify({
         'potability_prediction': prediction,
         'probability': float(prob),
