@@ -7,12 +7,17 @@ import pandas as pd
 import os
 
 # Load the trained model and threshold
-model_path = os.path.join(os.path.dirname(__file__), 'model.pkl')
+model_path = os.path.join(os.path.dirname(__file__), 'extratrees_model.pkl')
 model = joblib.load(model_path)
 threshold_path = os.path.join(os.path.dirname(__file__), 'best_threshold.npy')
-threshold = np.load(threshold_path)
-scaler_path = os.path.join(os.path.dirname(__file__), 'scaler.pkl')
+threshold = 0.6
+scaler_path = os.path.join(os.path.dirname(__file__), 'scaler_et.pkl')
 scaler = joblib.load(scaler_path)
+feature_names = ['ph', 'Hardness', 'Solids', 'Chloramines', 'Sulfate', 'Conductivity', 'Organic_carbon', 'Trihalomethanes', 'Turbidity']
+feats_test = [8.8425, 229.96, 7839.32, 10.51, 278.43, 370.09, 15.7910, 77.17, 4.5767]
+feats_test_scaled = scaler.transform(pd.DataFrame([feats_test], columns=feature_names))
+test_prob = model.predict_proba(feats_test_scaled)[:, 1]
+print(test_prob)
 
 app = Flask(__name__)
 
@@ -49,7 +54,6 @@ def predict():
     print("DATA RECEIVED:", data)
     print("FEATURES:", features)
     print("ISNA CHECK:\n", pd.DataFrame([features], columns=feature_names).isna())
-
 
     features_df = pd.DataFrame([features], columns=feature_names)
     features_scaled = scaler.transform(features_df)
